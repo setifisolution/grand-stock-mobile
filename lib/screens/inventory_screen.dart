@@ -18,7 +18,6 @@ import '../widgets/product_card.dart';
 import '../widgets/pagination_button.dart';
 import '../widgets/empty_widget.dart';
 
-
 class InventoryScreen extends StatefulWidget {
   final bool readOnly;
 
@@ -119,9 +118,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }) async {
     final productsToSubmit =
         products ??
-            (provider.allProducts as List<ProductModel>)
-                .where((p) => p.isAccepted)
-                .toList();
+        (provider.allProducts as List<ProductModel>)
+            .where((p) => p.isAccepted)
+            .toList();
 
     if (productsToSubmit.isEmpty) {
       if (context.mounted) {
@@ -140,7 +139,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         context: context,
         barrierDismissible: false,
         builder: (_) =>
-        const Center(child: CircularProgressIndicator.adaptive()),
+            const Center(child: CircularProgressIndicator.adaptive()),
       );
     }
 
@@ -200,14 +199,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // ✅ Updated to use ProductModel and composite key
   void _focusNextProduct(
-      ProductModel currentProduct,
-      List<ProductModel> products,
-      ) {
+    ProductModel currentProduct,
+    List<ProductModel> products,
+  ) {
     if (widget.readOnly) return;
 
     final currentKey = _getUniqueProductKey(currentProduct);
     final currentIndex = products.indexWhere(
-          (p) => _getUniqueProductKey(p) == currentKey,
+      (p) => _getUniqueProductKey(p) == currentKey,
     );
 
     if (currentIndex != -1 && currentIndex < products.length - 1) {
@@ -223,11 +222,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // ✅ Updated to take all components of the composite key
   void _navigateToProductAfterReload(
-      String? targetProductId,
-      String? lot,
-      String? codeLot,
-      String? location,
-      ) {
+    String? targetProductId,
+    String? lot,
+    String? codeLot,
+    String? location,
+  ) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
 
@@ -418,7 +417,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
       if (success) {
         final currentIndex = transferProvider.products.indexWhere(
-              (p) => _getUniqueProductKey(p) == productKey,
+          (p) => _getUniqueProductKey(p) == productKey,
         );
 
         ProductModel? nextProduct;
@@ -536,8 +535,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
     final out = <ProductModel>[];
     for (final a in _addedProducts) {
       final haystack =
-      '${a['nom'] ?? ''} ${a['lot'] ?? ''} ${a['codeLot'] ?? ''}'
-          .toLowerCase();
+          '${a['nom'] ?? ''} ${a['lot'] ?? ''} ${a['codeLot'] ?? ''}'
+              .toLowerCase();
       if (q.isNotEmpty && !haystack.contains(q)) continue;
       try {
         out.add(_addedToProduct(a));
@@ -604,10 +603,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
       floatingActionButton: readOnly
           ? null
           : FloatingActionButton(
-        onPressed: _openProductPicker,
-        tooltip: 'Ajouter un produit',
-        child: const Icon(Icons.add),
-      ),
+              onPressed: _openProductPicker,
+              tooltip: 'Ajouter un produit',
+              child: const Icon(Icons.add),
+            ),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         child: LoadingManager(
@@ -681,63 +680,64 @@ class _InventoryScreenState extends State<InventoryScreen> {
               ),
               sortedProducts.isEmpty
                   ? EmptyWidget(
-                imagePath: _searchController.text.isNotEmpty
-                    ? AssetsManager.emptySearch
-                    : AssetsManager.noData,
-                title: 'Aucun produit trouvé',
-                subtitle: _searchController.text.isNotEmpty
-                    ? 'Essayez de modifier votre recherche'
-                    : 'Aucun produit sur cette page',
-              )
+                      imagePath: _searchController.text.isNotEmpty
+                          ? AssetsManager.emptySearch
+                          : AssetsManager.noData,
+                      title: 'Aucun produit trouvé',
+                      subtitle: _searchController.text.isNotEmpty
+                          ? 'Essayez de modifier votre recherche'
+                          : 'Aucun produit sur cette page',
+                    )
                   : Expanded(
-                child: ListView.separated(
-                  // ✅ bottom: 80 so the FAB doesn't cover the last card
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-                  itemCount: sortedProducts.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final product = sortedProducts[index];
-                    final productKey = _getUniqueProductKey(product);
+                      child: ListView.separated(
+                        // ✅ bottom: 80 so the FAB doesn't cover the last card
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                        itemCount: sortedProducts.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final product = sortedProducts[index];
+                          final productKey = _getUniqueProductKey(product);
 
-                    final originalIndex = transferProvider.products
-                        .indexWhere(
-                          (p) => _getUniqueProductKey(p) == productKey,
-                    );
+                          final originalIndex = transferProvider.products
+                              .indexWhere(
+                                (p) => _getUniqueProductKey(p) == productKey,
+                              );
 
-                    final focusNode =
-                        _productFocusNodes[productKey] ?? FocusNode();
+                          final focusNode =
+                              _productFocusNodes[productKey] ?? FocusNode();
 
-                    if (!_productFocusNodes.containsKey(productKey)) {
-                      _productFocusNodes[productKey] = focusNode;
-                    }
+                          if (!_productFocusNodes.containsKey(productKey)) {
+                            _productFocusNodes[productKey] = focusNode;
+                          }
 
-                    // ✅ Use Key to prevent multiple cards from showing loading spinners
-                    final isValidating =
-                        _validatingProductKey == productKey;
+                          // ✅ Use Key to prevent multiple cards from showing loading spinners
+                          final isValidating =
+                              _validatingProductKey == productKey;
 
-                    // added products are display-only
-                    final locked = readOnly || addedKeys.contains(productKey);
+                          // added products are display-only
+                          final locked =
+                              readOnly || addedKeys.contains(productKey);
 
-                    return ProductCard(
-                      product: product,
-                      focusNode: focusNode,
-                      onValidated: () =>
-                          _focusNextProduct(product, sortedProducts),
-                      onAcceptToggle: locked
-                          ? null
-                          : () => _validateProductDirectly(product),
-                      onQuantityChange: locked
-                          ? null
-                          : (qty) => transferProvider.updateQuantity(
-                        originalIndex,
-                        qty,
+                          return ProductCard(
+                            product: product,
+                            focusNode: focusNode,
+                            onValidated: () =>
+                                _focusNextProduct(product, sortedProducts),
+                            onAcceptToggle: locked
+                                ? null
+                                : () => _validateProductDirectly(product),
+                            onQuantityChange: locked
+                                ? null
+                                : (qty) => transferProvider.updateQuantity(
+                                    originalIndex,
+                                    qty,
+                                  ),
+                            readOnly: locked,
+                            isValidating: isValidating,
+                          );
+                        },
                       ),
-                      readOnly: locked,
-                      isValidating: isValidating,
-                    );
-                  },
-                ),
-              ),
+                    ),
               if (pagination != null && pagination.totalPages > 1)
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -755,21 +755,21 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         final isActive = page == _currentPage;
                         final showEllipsis =
                             totalPages > 7 &&
-                                page != 1 &&
-                                page != totalPages &&
-                                (page < _currentPage - 1 ||
-                                    page > _currentPage + 1);
+                            page != 1 &&
+                            page != totalPages &&
+                            (page < _currentPage - 1 ||
+                                page > _currentPage + 1);
 
                         if (showEllipsis) {
                           return (page == _currentPage - 2 ||
-                              page == _currentPage + 2)
+                                  page == _currentPage + 2)
                               ? const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(
-                              '...',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          )
+                                  padding: EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    '...',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                )
                               : const SizedBox.shrink();
                         }
 

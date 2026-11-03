@@ -1,18 +1,27 @@
+import 'package:dio/dio.dart';
+
+import '../constant/app_constants.dart';
+
 class ApiConnectivityHelper {
   static const Duration _pingTimeout = Duration(seconds: 3);
 
   /// Test if local API is reachable by pinging a lightweight endpoint
   static Future<bool> isLocalApiReachable() async {
     try {
-      final dio = Dio(BaseOptions(
-        baseUrl: AppConstants.localUrl,
-        connectTimeout: _pingTimeout,
-        receiveTimeout: _pingTimeout,
-      ));
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: AppConstants.localUrl,
+          connectTimeout: _pingTimeout,
+          receiveTimeout: _pingTimeout,
+        ),
+      );
 
       // Try a lightweight HEAD or GET request to a health endpoint
       // Adjust '/health' or '/ping' to match your API's actual endpoint
-      final response = await dio.get('/health', queryParameters: {'t': DateTime.now().millisecondsSinceEpoch});
+      final response = await dio.get(
+        '/health',
+        queryParameters: {'t': DateTime.now().millisecondsSinceEpoch},
+      );
       return response.statusCode == 200;
     } on DioException catch (e) {
       // Connection timeout, refused, or network unreachable = local is down

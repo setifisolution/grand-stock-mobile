@@ -207,6 +207,7 @@ class TransferValidationProvider extends ChangeNotifier {
 
   Future<bool> fetchItems({
     required int page,
+
     String? reOrder,
     String? search,
     String? filterStatus,
@@ -219,7 +220,7 @@ class TransferValidationProvider extends ChangeNotifier {
       final response = await _transferService.fetchItems(
         page: page,
         zone: currentUser.zone,
-        warehouse: currentUser.warehouse,
+        warehouse: currentUser.wareHouse,
         reOrder: reOrder,
         search: search,
         filterStatus: filterStatus,
@@ -257,7 +258,7 @@ class TransferValidationProvider extends ChangeNotifier {
       final result = await _transferService.getProductsByTransfer(
         transferId: transferId,
         zone: currentUser.zone,
-        warehouse: currentUser.warehouse,
+        warehouse: currentUser.wareHouse,
       );
       if (result != null && result.isNotEmpty) {
         _allProducts = result;
