@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'constant/app_constants.dart';
 import 'manager/routes_manger.dart';
 import 'providers/arrangement_provider.dart';
 import 'providers/transfer_intern_provider.dart';
@@ -12,6 +13,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppConstants.init(); // load saved server endpoint/port
 
   runApp(
     MultiProvider(

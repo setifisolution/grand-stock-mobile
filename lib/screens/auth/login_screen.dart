@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../exceptions/api_exception.dart';
 import '../../exceptions/auth_exception.dart';
+import '../../helper/server_settings_auth.dart';
 import '../../manager/hash_manager.dart';
 import '../../manager/assets_manager.dart';
 import '../../manager/my_app_method.dart';
@@ -154,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: Padding(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             child: Column(
@@ -247,6 +251,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  tooltip: 'Paramètres du serveur',
+                  icon: const Icon(Icons.settings, color: Colors.grey),
+                  onPressed: _isLoading
+                      ? null
+                      : () => ServerSettingsAuth.openProtected(context),
+                ),
+              ),
+            ],
           ),
         ),
       ),

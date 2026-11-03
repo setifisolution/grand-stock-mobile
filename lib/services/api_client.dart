@@ -18,6 +18,13 @@ class ApiClient {
     _setupInterceptors();
   }
 
+  /// Re-applies the current AppConstants.baseUrl to the shared Dio instance.
+  /// Call this after the server endpoint/port has been changed.
+  static void reconfigure() {
+    _dio.options.baseUrl = AppConstants.baseUrl;
+    _logger.i('🔄 ApiClient reconfigured: ${AppConstants.baseUrl}');
+  }
+
   void _setupDio() {
     _dio.options = BaseOptions(
       baseUrl: AppConstants.baseUrl,
